@@ -1,0 +1,51 @@
+import random
+import discord
+import os
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix='()', intents=intents)
+
+def gen_pass(pass_length):
+    elements = "+-/*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    password = ""
+    for i in range(pass_length):
+        password += random.choice(elements)
+    return password
+
+@bot.event
+async def on_ready():
+    print(f'We have logged in as {bot.user}')
+
+@bot.command()
+async def hello(ctx):
+    await ctx.send(f'Привет! Я бот {bot.user}!')
+
+@bot.command()
+async def bye(ctx):
+    await ctx.send(f'Пока!')
+    
+@bot.command()
+async def pasw(ctx, count=8):
+    await ctx.send(f'Your password - {gen_pass(count)}')
+    
+    
+@bot.command()
+async def How_to_help_the_environment(ctx):
+    await ctx.send(f'1.Do not litter. 2.Recycle clothes. 3.Use a bicycle instead of a car. 4.Reduce consumption of harmful materials. 5.Save energy. 6.Save water.')    
+
+
+@bot.command()
+async def environment_pages(ctx):
+    lst = os.listdir('pages')
+    rand_img = random.choice(lst)
+    with open('pages/' + rand_img, 'rb') as f:
+        # В переменную кладем файл, который преобразуется в файл библиотеки Discord!
+        picture = discord.File(f)
+   # Можем передавать файл как параметр!
+    await ctx.send(file=picture)
+    
+    
+bot.run('BOT TOKEN')
